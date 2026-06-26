@@ -18,6 +18,12 @@ export const metadata: Metadata = {
     "Interior Design",
   ],
   authors: [{ name: "The Granite Vault" }],
+  icons: {
+    icon: [
+      { url: "/icon.png?v=3", type: "image/png" }
+    ],
+    apple: "/icon.png?v=3",
+  }
 };
 
 export default function RootLayout({
