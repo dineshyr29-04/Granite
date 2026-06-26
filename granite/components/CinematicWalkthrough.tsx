@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 
 interface Scene {
@@ -29,7 +29,7 @@ const SCENES: Scene[] = [
     id: "living",
     image: "/room_living.png",
     title: "COSMIC BLACK",
-    subtitle: "Applied on Feature Wall",
+    subtitle: "Living Room — Feature Wall",
     origin: "Brazil",
     desc: "Deep black granite with natural golden veins.",
     align: "left",
@@ -38,7 +38,7 @@ const SCENES: Scene[] = [
     id: "kitchen",
     image: "/room_kitchen.png",
     title: "ALASKA WHITE",
-    subtitle: "Applied on Island & Backsplash",
+    subtitle: "Kitchen — Island & Backsplash",
     origin: "India",
     desc: "Frosty white background with complex pewter veining.",
     align: "right",
@@ -47,7 +47,7 @@ const SCENES: Scene[] = [
     id: "bathroom",
     image: "/room_bathroom.png",
     title: "TITANIUM GREY",
-    subtitle: "Applied on Walls & Vanity",
+    subtitle: "Spa Bathroom — Walls & Vanity",
     origin: "India",
     desc: "Contemporary charcoal grey with natural quartz swirls.",
     align: "left",
@@ -56,12 +56,14 @@ const SCENES: Scene[] = [
     id: "bedroom",
     image: "/room_bedroom.png",
     title: "PATAGONIA",
-    subtitle: "Applied on Statement Wall",
+    subtitle: "Master Bedroom — Statement Wall",
     origin: "Brazil",
     desc: "Translucent cream quartz with dark obsidian patches.",
     align: "right",
   },
 ];
+
+const N = SCENES.length; // 5
 
 interface Props {
   onProgress: (progress: number) => void;
@@ -73,106 +75,138 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
 
   useEffect(() => {
     let rafId: number;
-
     const handleScroll = () => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      
-      // Total scrollable height = section height - viewport height
       const scrollHeight = rect.height - window.innerHeight;
       const relativeScroll = -rect.top;
-      
       let p = relativeScroll / scrollHeight;
       p = Math.max(0, Math.min(1, p));
-      
+      cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         setProgress(p);
         onProgress(p);
       });
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    
     return () => {
       window.removeEventListener("scroll", handleScroll);
       cancelAnimationFrame(rafId);
     };
   }, [onProgress]);
 
-  const SCENE_DURATION = 1 / SCENES.length; // 0.2
-  const FADE_DUR = 0.05;
+  const scrollIn = useCallback(() => {
+    window.scrollBy({ top: window.innerHeight * 1.5, behavior: "smooth" });
+  }, []);
+
+  // ─── Per-scene opacity logic ───────────────────────────────────────────────
+  // Each scene owns a 1/N slice of [0, 1].
+  // Cross-fade duration = 5% of total progress on each boundary.
+  const CROSS = 0.05; // cross-fade width
+
+  function getSceneOpacity(i: number, p: number): number {
+    const start = i / N;        // scene starts
+    const end = (i + 1) / N;   // scene ends
+    const fadeIn = start - CROSS / 2;   // fade-in begins half a CROSS before start
+    const fadeOut = end - CROSS / 2;    // fade-out begins half a CROSS before end
+
+    if (i === 0) {
+      // First scene: always visible until its fade-out starts
+      if (p < fadeOut) return 1;
+      if (p < fadeOut + CROSS) return 1 - (p - fadeOut) / CROSS;
+      return 0;
+    }
+
+    if (i === N - 1) {
+      // Last scene: fades in, then stays at 1 forever (until the walkthrough ends)
+      if (p < fadeIn) return 0;
+      if (p < fadeIn + CROSS) return (p - fadeIn) / CROSS;
+      return 1;
+    }
+
+    // Middle scenes: fade in then fade out
+    if (p < fadeIn) return 0;
+    if (p < fadeIn + CROSS) return (p - fadeIn) / CROSS;   // fading in
+    if (p < fadeOut) return 1;                              // fully visible
+    if (p < fadeOut + CROSS) return 1 - (p - fadeOut) / CROSS; // fading out
+    return 0;
+  }
+
+  // ─── Per-scene text opacity ────────────────────────────────────────────────
+  // Text fades in 20% into the scene's window and fades out 20% before the end.
+  function getTextOpacity(i: number, p: number): number {
+    const start = i / N;
+    const end = (i + 1) / N;
+    const dur = end - start;
+    const textIn = start + dur * 0.15;
+    const textOut = end - dur * 0.20;
+    const fadeDur = dur * 0.12;
+
+    // Special case: exterior hero text is visible right from 0
+    if (i === 0) {
+      if (p < textOut) return 1;
+      if (p < textOut + fadeDur) return 1 - (p - textOut) / fadeDur;
+      return 0;
+    }
+
+    if (i === N - 1) {
+      // Last scene text stays visible
+      if (p < textIn) return 0;
+      if (p < textIn + fadeDur) return (p - textIn) / fadeDur;
+      return 1;
+    }
+
+    if (p < textIn) return 0;
+    if (p < textIn + fadeDur) return (p - textIn) / fadeDur;
+    if (p < textOut) return 1;
+    if (p < textOut + fadeDur) return 1 - (p - textOut) / fadeDur;
+    return 0;
+  }
+
+  // ─── Scale (push-forward illusion) ────────────────────────────────────────
+  function getScale(i: number, p: number): number {
+    const start = i === 0 ? 0 : i / N - CROSS / 2;
+    const end = i === N - 1 ? 1 : (i + 1) / N;
+    const range = end - start;
+    const sp = Math.max(0, Math.min(1, (p - start) / range));
+    return 1.0 + sp * 0.2; // scale from 1.0 → 1.2
+  }
+
+  // Active scene index (for progress dots)
+  const activeIndex = Math.min(N - 1, Math.floor(progress * N));
 
   return (
-    <div ref={containerRef} className="relative w-full" style={{ height: "600vh", background: "#060608" }}>
-      {/* Sticky viewport */}
+    <div
+      ref={containerRef}
+      className="relative w-full"
+      style={{ height: "600vh", background: "#0a0a0a" }}
+    >
+      {/* ─── Sticky viewport ──────────────────────────────────────────────── */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-black">
-        
+
+        {/* ─── Scene layers ─────────────────────────────────────────────── */}
         {SCENES.map((scene, i) => {
-          const start = i * SCENE_DURATION;
-          const end = start + SCENE_DURATION;
-          
-          const fadeInStart = i === 0 ? 0 : start - FADE_DUR;
-          const fadeOutStart = i === SCENES.length - 1 ? 1 : end - FADE_DUR;
-
-          // Opacity calculation
-          let opacity = 0;
-          if (progress >= fadeInStart && progress <= fadeOutStart) {
-            opacity = 1;
-            if (progress < start && i > 0) {
-              opacity = (progress - fadeInStart) / FADE_DUR;
-            }
-          } else if (progress > fadeOutStart && progress <= end && i < SCENES.length - 1) {
-            opacity = 1 - (progress - fadeOutStart) / FADE_DUR;
-          } else if (i === SCENES.length - 1 && progress >= fadeOutStart) {
-            opacity = 1; // Last scene stays visible until standard scroll takes over
-          }
-
-          // Scale calculation (simulate walking forward)
-          const visibleDur = (i === SCENES.length - 1 ? 1.0 : end) - fadeInStart;
-          let scaleProgress = 0;
-          if (progress > fadeInStart) {
-            scaleProgress = Math.min(1, (progress - fadeInStart) / visibleDur);
-          }
-          const scale = 1.0 + (scaleProgress * 0.25);
-
-          // Text Opacity (plateau only)
-          let textOpacity = 0;
-          const textFadeStart = start;
-          const textFadeEnd = start + 0.03;
-          const textFadeOutStart = end - 0.06;
-          const textFadeOutEnd = end - 0.03;
-
-          if (progress >= textFadeEnd && progress <= textFadeOutStart) {
-            textOpacity = 1;
-          } else if (progress > textFadeStart && progress < textFadeEnd) {
-            textOpacity = (progress - textFadeStart) / 0.03;
-          } else if (progress > textFadeOutStart && progress < textFadeOutEnd && i < SCENES.length - 1) {
-            textOpacity = 1 - (progress - textFadeOutStart) / 0.03;
-          } else if (i === SCENES.length - 1 && progress >= textFadeOutStart) {
-             textOpacity = 1;
-          }
-          
-          if (i === 0 && progress < 0.1) textOpacity = 1;
-          if (i === 0 && progress >= 0.1 && progress <= 0.15) {
-             textOpacity = 1 - (progress - 0.1) / 0.05;
-          }
+          const opacity = getSceneOpacity(i, progress);
+          const textOpacity = getTextOpacity(i, progress);
+          const scale = getScale(i, progress);
 
           return (
             <div
               key={scene.id}
-              className="absolute inset-0 flex flex-col justify-center will-change-transform"
+              className="absolute inset-0 flex items-center justify-start"
               style={{
-                opacity: opacity,
-                pointerEvents: opacity > 0.1 ? "auto" : "none",
-                zIndex: i,
+                opacity,
+                zIndex: i, // later scenes sit on top; all use their own opacity
+                willChange: "opacity",
               }}
             >
-              {/* Background Image Layer */}
-              <div 
-                className="absolute inset-0 will-change-transform origin-center"
+              {/* Background image – scales independently for parallax push */}
+              <div
+                className="absolute inset-0 origin-center"
                 style={{
                   transform: `scale(${scale})`,
+                  willChange: "transform",
                 }}
               >
                 <Image
@@ -183,58 +217,64 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
                   sizes="100vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
-                {scene.align === "left" && <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />}
-                {scene.align === "right" && <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-transparent" />}
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-black/40" />
+                {scene.align === "left"  && <div className="absolute inset-0 bg-gradient-to-r from-black/75 to-transparent" />}
+                {scene.align === "right" && <div className="absolute inset-0 bg-gradient-to-l from-black/75 to-transparent" />}
               </div>
 
-              {/* Minimal Text Overlay Layer */}
+              {/* Text overlay */}
               <div
-                className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 flex flex-col will-change-opacity"
+                className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 flex flex-col"
                 style={{
                   opacity: textOpacity,
-                  transform: `translateY(${(1 - textOpacity) * 20}px)`,
-                  transition: "opacity 0.1s ease-out, transform 0.1s ease-out",
+                  transform: `translateY(${(1 - textOpacity) * 18}px)`,
+                  transition: "opacity 0.15s ease-out, transform 0.15s ease-out",
                   alignItems: scene.align === "center" ? "center" : scene.align === "right" ? "flex-end" : "flex-start",
-                  textAlign: scene.align === "center" ? "center" : scene.align === "right" ? "right" : "left",
+                  textAlign:  scene.align === "center" ? "center" : scene.align === "right" ? "right"    : "left",
                 }}
               >
                 {scene.id === "exterior" ? (
+                  /* ── Hero text ── */
                   <>
-                    <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white tracking-[0.1em] mb-4 drop-shadow-2xl">
+                    <h1
+                      className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white tracking-[0.08em] mb-5"
+                      style={{ textShadow: "0 4px 32px rgba(0,0,0,0.6)" }}
+                    >
                       {scene.title}
                     </h1>
-                    <p className="text-[11px] md:text-xs tracking-[0.4em] uppercase text-white/80 font-medium mb-12 drop-shadow-md">
+                    <p className="text-[11px] md:text-xs tracking-[0.42em] uppercase text-white/75 font-medium mb-12">
                       {scene.subtitle}
                     </p>
-                    {scene.button && (
-                      <div className="flex flex-col items-center gap-4">
-                        <button 
-                          className="px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-300 cursor-pointer"
-                          onClick={() => {
-                            window.scrollBy({ top: window.innerHeight * 1.5, behavior: "smooth" });
-                          }}
-                        >
-                          {scene.button}
-                        </button>
-                        <div className="w-[1px] h-8 bg-gradient-to-b from-white/50 to-transparent animate-pulse" />
-                      </div>
-                    )}
+                    <div className="flex flex-col items-center gap-4">
+                      <button
+                        onClick={scrollIn}
+                        className="px-10 py-3.5 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] tracking-[0.28em] uppercase font-medium transition-all duration-300 cursor-pointer active:scale-95"
+                      >
+                        {scene.button}
+                      </button>
+                      <div className="w-[1px] h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse" />
+                    </div>
                   </>
                 ) : (
+                  /* ── Room text ── */
                   <div className="max-w-lg">
-                    <p className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/70 font-medium mb-2">
+                    <p className="text-[9px] md:text-[10px] tracking-[0.38em] uppercase text-white/60 font-medium mb-3">
                       {scene.subtitle}
                     </p>
-                    <h2 className="font-serif text-4xl md:text-6xl font-light text-white mb-2 tracking-wide drop-shadow-lg">
+                    <h2
+                      className="font-serif text-4xl md:text-6xl font-light text-white mb-3 tracking-wide"
+                      style={{ textShadow: "0 2px 24px rgba(0,0,0,0.5)" }}
+                    >
                       {scene.title}
                     </h2>
-                    <div className="flex items-center gap-4 mb-4 justify-start" style={{ justifyContent: scene.align === "right" ? "flex-end" : "flex-start" }}>
-                      <span className="text-[9px] tracking-[0.2em] uppercase text-gold-400 font-medium border border-gold-400/30 px-3 py-1">
-                        {scene.origin}
-                      </span>
-                    </div>
-                    <p className="text-white/80 text-sm md:text-base leading-relaxed font-light">
+                    <span
+                      className="inline-block text-[9px] tracking-[0.22em] uppercase font-medium mb-4 px-3 py-1 border"
+                      style={{ color: "var(--color-gold-300)", borderColor: "rgba(218,168,74,0.35)" }}
+                    >
+                      {scene.origin}
+                    </span>
+                    <p className="text-white/75 text-sm md:text-base leading-relaxed font-light">
                       {scene.desc}
                     </p>
                   </div>
@@ -244,21 +284,32 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
           );
         })}
 
-        {/* Minimal Progress Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-2">
-          {SCENES.map((_, i) => {
-            const isActive = progress >= i * SCENE_DURATION && progress < (i + 1) * SCENE_DURATION;
-            return (
-              <div 
-                key={i} 
-                className="w-8 h-[2px] rounded-full transition-all duration-300"
-                style={{
-                  background: isActive ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.2)"
-                }}
-              />
-            );
-          })}
+        {/* ─── Progress dots ─────────────────────────────────────────────── */}
+        <div className="absolute bottom-9 left-1/2 -translate-x-1/2 z-30 flex gap-2.5 items-center">
+          {SCENES.map((_, i) => (
+            <div
+              key={i}
+              className="rounded-full transition-all duration-400"
+              style={{
+                width:  i === activeIndex ? "24px" : "6px",
+                height: "6px",
+                background: i === activeIndex ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.25)",
+              }}
+            />
+          ))}
         </div>
+
+        {/* ─── Scroll hint (only at very beginning) ─────────────────────── */}
+        <div
+          className="absolute bottom-9 right-10 z-30 flex items-center gap-2 transition-opacity duration-500 pointer-events-none"
+          style={{ opacity: progress < 0.06 ? 1 : 0 }}
+        >
+          <div className="w-[14px] h-[22px] border border-white/30 rounded-full flex justify-center pt-1">
+            <div className="w-[2px] h-[6px] bg-white/50 rounded-full animate-bounce" />
+          </div>
+          <span className="text-[9px] tracking-[0.3em] uppercase text-white/35 font-medium">Scroll</span>
+        </div>
+
       </div>
     </div>
   );

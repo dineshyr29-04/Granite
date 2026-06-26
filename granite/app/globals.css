@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600;700&display=swap');
-@import "tailwindcss";
-@source "../app/**/*.{js,ts,jsx,tsx}";
-@source "../components/**/*.{js,ts,jsx,tsx}";
+@tailwind base;
+@tailwind compone nts;
+@tailwind utilities;
 
 :root {
   --background: #faf9f6;
@@ -29,34 +29,6 @@
   --color-stone-700: #655a50;
   --color-stone-800: #4e4540;
   --color-stone-900: #3b3430;
-}
-
-@theme {
-  --color-gold-50:  var(--color-gold-50);
-  --color-gold-100: var(--color-gold-100);
-  --color-gold-200: var(--color-gold-200);
-  --color-gold-300: var(--color-gold-300);
-  --color-gold-400: var(--color-gold-400);
-  --color-gold-500: var(--color-gold-500);
-  --color-gold-600: var(--color-gold-600);
-  --color-gold-700: var(--color-gold-700);
-  --color-gold-800: var(--color-gold-800);
-  --color-gold-900: var(--color-gold-900);
-  --color-gold-950: var(--color-gold-950);
-
-  --color-stone-50:  var(--color-stone-50);
-  --color-stone-100: var(--color-stone-100);
-  --color-stone-200: var(--color-stone-200);
-  --color-stone-300: var(--color-stone-300);
-  --color-stone-400: var(--color-stone-400);
-  --color-stone-500: var(--color-stone-500);
-  --color-stone-600: var(--color-stone-600);
-  --color-stone-700: var(--color-stone-700);
-  --color-stone-800: var(--color-stone-800);
-  --color-stone-900: var(--color-stone-900);
-
-  --font-serif: 'Cormorant Garamond', serif;
-  --font-sans:  'Jost', sans-serif;
 }
 
 /* === Base === */
