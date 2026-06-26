@@ -1,20 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import HouseWalkthrough from "@/components/HouseWalkthrough";
+import CinematicWalkthrough from "@/components/CinematicWalkthrough";
 import GraniteGrid from "@/components/GraniteGrid";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [highlightGranite, setHighlightGranite] = useState<string | null>(null);
+  const [walkthroughProgress, setWalkthroughProgress] = useState(0);
 
-  // Scroll reveal
+  // Scroll reveal for sections below the cinematic walkthrough
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 60);
-
       // Reveal elements
       const revealEls = document.querySelectorAll(".reveal");
       revealEls.forEach((el) => {
@@ -34,31 +31,31 @@ export default function Home() {
     setMobileMenuOpen(false);
   };
 
-  const handleGraniteClick = (granite: string) => {
-    setHighlightGranite(granite.toLowerCase().replace(/\s+/g, "-"));
-    setTimeout(() => {
-      document.getElementById("collection")?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-  };
-
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert("Thank you! Your consultation request has been received. Our team will contact you shortly.");
     (e.target as HTMLFormElement).reset();
   };
 
+  // Header should only appear when the cinematic walkthrough is mostly complete
+  // i.e. when we are at or past the last scene.
+  const showHeader = walkthroughProgress > 0.95;
+
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "#faf9f6" }}>
 
       {/* ========== NAVIGATION ========== */}
       <header
-        className="fixed top-0 left-0 w-full z-50 transition-all duration-500"
+        className="fixed top-0 left-0 w-full z-50 transition-all duration-700"
         style={{
-          background: scrolled ? "rgba(250,249,246,0.95)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          borderBottom: scrolled ? "1px solid #e4ddd2" : "1px solid transparent",
-          paddingTop: scrolled ? "14px" : "20px",
-          paddingBottom: scrolled ? "14px" : "20px",
+          background: "rgba(250,249,246,0.95)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid #e4ddd2",
+          paddingTop: "14px",
+          paddingBottom: "14px",
+          transform: showHeader ? "translateY(0)" : "translateY(-100%)",
+          opacity: showHeader ? 1 : 0,
+          pointerEvents: showHeader ? "auto" : "none",
         }}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
@@ -71,8 +68,7 @@ export default function Home() {
               <span>GV</span>
             </div>
             <span
-              className="font-serif text-sm font-semibold tracking-[0.28em] transition-colors duration-300"
-              style={{ color: scrolled ? "#1a1814" : "#fff" }}
+              className="font-serif text-sm font-semibold tracking-[0.28em] text-[#1a1814]"
             >
               THE GRANITE VAULT
             </span>
@@ -81,7 +77,6 @@ export default function Home() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             {[
-              { label: "Walkthrough", id: "walkthrough" },
               { label: "Collection", id: "collection" },
               { label: "Sourcing", id: "sourcing" },
               { label: "About", id: "about" },
@@ -90,8 +85,7 @@ export default function Home() {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="nav-link"
-                style={{ color: scrolled ? "#5a4f44" : "rgba(255,255,255,0.75)" }}
+                className="nav-link text-[#5a4f44]"
               >
                 {item.label}
               </button>
@@ -117,8 +111,7 @@ export default function Home() {
             {[0, 1, 2].map((i) => (
               <span
                 key={i}
-                className="block w-5 h-[1.5px] transition-all duration-300"
-                style={{ background: scrolled ? "#1a1814" : "#fff" }}
+                className="block w-5 h-[1.5px] transition-all duration-300 bg-[#1a1814]"
               />
             ))}
           </button>
@@ -128,7 +121,6 @@ export default function Home() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-stone-200 px-6 py-6 flex flex-col gap-4">
             {[
-              { label: "Walkthrough", id: "walkthrough" },
               { label: "Collection", id: "collection" },
               { label: "Sourcing", id: "sourcing" },
               { label: "About", id: "about" },
@@ -137,8 +129,7 @@ export default function Home() {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="nav-link text-left"
-                style={{ color: "#5a4f44" }}
+                className="nav-link text-left text-[#5a4f44]"
               >
                 {item.label}
               </button>
@@ -150,139 +141,15 @@ export default function Home() {
         )}
       </header>
 
-      {/* ========== HERO SECTION ========== */}
-      <section className="relative w-full overflow-hidden" style={{ height: "100vh" }}>
-        {/* Background image */}
-        <Image
-          src="/hero_corridor.png"
-          alt="Luxury Villa Interior — The Granite Vault"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* Dark overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
-
-        {/* Hero content */}
-        <div className="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 lg:px-24 max-w-7xl mx-auto w-full">
-          <div className="max-w-2xl">
-            {/* Pre-heading */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-[1px] bg-gold-400" />
-              <span className="text-[10px] font-medium tracking-[0.45em] uppercase text-gold-300">
-                Premium Architectural Granite
-              </span>
-            </div>
-
-            {/* Main heading */}
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white leading-[1.05] tracking-wide mb-6">
-              Where Stone<br />
-              Becomes <em className="font-light italic">Art.</em>
-            </h1>
-
-            {/* Subtext */}
-            <p className="text-white/65 text-sm md:text-base leading-relaxed font-light max-w-md mb-10">
-              Experience our premium granites inside a luxury villa walkthrough. 
-              Each stone tells a geological story millions of years in the making.
-            </p>
-
-            {/* CTA row */}
-            <div className="flex flex-wrap gap-4 items-center">
-              <button
-                onClick={() => scrollTo("walkthrough")}
-                className="btn-primary"
-              >
-                Begin Walkthrough ↓
-              </button>
-              <button
-                onClick={() => scrollTo("collection")}
-                className="btn-ghost border-white/30 text-white/80 hover:bg-white hover:text-zinc-900 hover:border-white"
-              >
-                View Collection
-              </button>
-            </div>
-          </div>
-
-          {/* Floating trust indicators */}
-          <div className="absolute bottom-12 right-8 md:right-16 flex gap-8 md:gap-12">
-            {[
-              { value: "15+", label: "Years" },
-              { value: "450+", label: "Projects" },
-              { value: "10+", label: "Quarries" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <span className="font-serif text-2xl md:text-3xl font-light text-white block leading-none mb-1">
-                  {stat.value}
-                </span>
-                <span className="text-[9px] tracking-[0.3em] uppercase text-white/40 font-medium">
-                  {stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
-          <div className="w-[1px] h-10 bg-gradient-to-b from-transparent to-white/40 animate-pulse" />
-          <span className="text-[9px] tracking-[0.35em] uppercase text-white/30">Scroll</span>
-        </div>
-      </section>
-
-      {/* ========== INTRO STRIP ========== */}
-      <section className="w-full bg-white py-16 px-6 md:px-16 border-b border-stone-200">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-          <p className="font-serif text-xl md:text-2xl font-light text-zinc-600 leading-relaxed max-w-xl italic">
-            "We don&apos;t sell granite. We curate natural masterpieces — each slab is a one-of-a-kind geological event frozen in stone."
-          </p>
-          <div className="flex gap-10 flex-shrink-0">
-            <div className="text-center">
-              <span className="font-serif text-4xl text-gold-600 font-light block">100%</span>
-              <span className="text-[9px] tracking-widest text-stone-400 uppercase font-medium">Direct Import</span>
-            </div>
-            <div className="w-[1px] bg-stone-200 self-stretch" />
-            <div className="text-center">
-              <span className="font-serif text-4xl text-gold-600 font-light block">7</span>
-              <span className="text-[9px] tracking-widest text-stone-400 uppercase font-medium">Stone Types</span>
-            </div>
-            <div className="w-[1px] bg-stone-200 self-stretch" />
-            <div className="text-center">
-              <span className="font-serif text-4xl text-gold-600 font-light block">3</span>
-              <span className="text-[9px] tracking-widest text-stone-400 uppercase font-medium">Countries</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <main>
-        {/* ========== HOUSE WALKTHROUGH ========== */}
-        <section id="walkthrough" className="w-full relative">
-          {/* Section header */}
-          <div className="w-full bg-white py-16 px-6 md:px-16 border-b border-stone-200">
-            <div className="max-w-7xl mx-auto">
-              <span className="section-label mb-3 block">Virtual Tour</span>
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <h2 className="font-serif text-4xl md:text-5xl font-light text-zinc-900 leading-tight">
-                  Explore Granite<br />
-                  <em className="font-light">In Real Spaces</em>
-                </h2>
-                <p className="text-stone-400 text-sm font-light max-w-xs">
-                  Scroll to walk through a luxury villa and discover how each granite transforms a space.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <HouseWalkthrough onGraniteClick={handleGraniteClick} />
-        </section>
+        {/* ========== CINEMATIC WALKTHROUGH ========== */}
+        <CinematicWalkthrough onProgress={setWalkthroughProgress} />
 
         {/* ========== GRANITE COLLECTION GRID ========== */}
-        <GraniteGrid highlightId={highlightGranite} />
+        <GraniteGrid highlightId={null} />
 
         {/* ========== SOURCING SECTION ========== */}
-        <section id="sourcing" className="w-full bg-white py-24 px-6 md:px-16 border-t border-stone-100">
+        <section id="sourcing" className="w-full bg-white py-24 px-6 md:px-16 border-t border-stone-100 relative z-20">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-16 items-start">
               {/* Left: copy */}
@@ -359,7 +226,7 @@ export default function Home() {
         </section>
 
         {/* ========== ABOUT METRICS ========== */}
-        <section id="about" className="w-full py-24 px-6 md:px-16 border-t border-stone-100" style={{ background: "#fdf9f4" }}>
+        <section id="about" className="w-full py-24 px-6 md:px-16 border-t border-stone-100 relative z-20" style={{ background: "#fdf9f4" }}>
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               {/* Left: image collage */}
@@ -412,7 +279,7 @@ export default function Home() {
         </section>
 
         {/* ========== CONTACT SECTION ========== */}
-        <section id="contact" className="w-full bg-white py-24 px-6 md:px-16 border-t border-stone-200">
+        <section id="contact" className="w-full bg-white py-24 px-6 md:px-16 border-t border-stone-200 relative z-20">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-16">
               {/* Left: info + image */}
@@ -444,7 +311,7 @@ export default function Home() {
 
                 {/* Kitchen image */}
                 <div className="relative h-48 md:h-60 overflow-hidden shadow-lg reveal reveal-delay-4">
-                  <Image src="/room_kitchen.png" alt="Granite in your kitchen" fill className="object-cover" />
+                  <Image src="/room_kitchen.png" alt="Granite in your kitchen" fill sizes="40vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute bottom-4 left-5">
                     <span className="font-serif text-white text-lg italic font-light">Alaska White</span>
@@ -556,7 +423,7 @@ export default function Home() {
       </main>
 
       {/* ========== FOOTER ========== */}
-      <footer className="w-full py-16 px-6 md:px-16 border-t border-stone-200" style={{ background: "#f5f3ef" }}>
+      <footer className="w-full py-16 px-6 md:px-16 border-t border-stone-200 relative z-20" style={{ background: "#f5f3ef" }}>
         <div className="max-w-7xl mx-auto">
           {/* Main footer grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
@@ -593,7 +460,6 @@ export default function Home() {
               <ul className="flex flex-col gap-2.5">
                 {[
                   { label: "Home", id: "top" },
-                  { label: "Walkthrough", id: "walkthrough" },
                   { label: "Collection", id: "collection" },
                   { label: "Sourcing", id: "sourcing" },
                   { label: "Contact", id: "contact" },
