@@ -120,34 +120,34 @@ export default function GraniteGrid() {
   });
 
   return (
-    <section id="collection" className="w-full bg-[#060608] py-24 px-6 md:px-16 border-t border-zinc-900 relative z-20">
+    <section id="collection" className="w-full bg-white py-24 px-6 md:px-16 border-t border-zinc-100 relative z-20">
       
       {/* Visual background lights */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-950/10 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-950/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         
         {/* Section Header */}
         <div className="flex flex-col items-center text-center mb-16 select-none">
-          <span className="text-[10px] tracking-[0.4em] text-gold-400 font-bold uppercase mb-2">
+          <span className="text-[10px] tracking-[0.4em] text-gold-500 font-bold uppercase mb-2">
             SELECTIVE ARCHIVE
           </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-extrabold tracking-widest text-white uppercase mb-4">
+          <h2 className="font-serif text-4xl md:text-5xl font-extrabold tracking-widest text-zinc-900 uppercase mb-4">
             THE GRANITE COLLECTION
           </h2>
           <div className="h-[1.5px] w-24 bg-gradient-to-r from-transparent via-gold-400 to-transparent mb-6" />
-          <p className="text-zinc-400 text-xs md:text-sm tracking-wider max-w-xl leading-relaxed font-light">
+          <p className="text-zinc-500 text-xs md:text-sm tracking-wider max-w-xl leading-relaxed font-light">
             Browse our complete inventory in standard grid preview. Click on any classification panel to inspect structural metrics and sourcing logs.
           </p>
         </div>
 
         {/* Filter & Search Bar Controls */}
-        <div className="glass-panel rounded-lg p-6 mb-12 flex flex-col lg:flex-row gap-6 items-center justify-between shadow-xl border border-zinc-900/60">
+        <div className="bg-zinc-50 rounded-lg p-6 mb-12 flex flex-col lg:flex-row gap-6 items-center justify-between shadow-sm border border-zinc-200/60">
           
           {/* Search Box */}
           <div className="relative w-full lg:w-96">
-            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-500">
+            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-400">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -157,7 +157,7 @@ export default function GraniteGrid() {
               placeholder="Search by classification or origin..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-zinc-950/60 border border-zinc-800 rounded py-3 pl-12 pr-4 text-xs tracking-wider text-white placeholder-zinc-500 focus:outline-none focus:border-gold-500/50 transition-all duration-300 font-medium"
+              className="w-full bg-white border border-zinc-200 rounded py-3 pl-12 pr-4 text-xs tracking-wider text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-gold-500/50 transition-all duration-300 font-medium"
             />
           </div>
 
@@ -166,16 +166,16 @@ export default function GraniteGrid() {
             
             {/* Tone Filter */}
             <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
-              <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-500 uppercase mr-2">Tone:</span>
-              <div className="flex bg-zinc-950/50 p-1 border border-zinc-900 rounded">
+              <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-400 uppercase mr-2">Tone:</span>
+              <div className="flex bg-white p-1 border border-zinc-200/80 rounded">
                 {(["all", "dark", "light", "colored"] as const).map((tone) => (
                   <button
                     key={tone}
                     onClick={() => setSelectedTone(tone)}
                     className={`px-3 py-1.5 rounded text-[10px] tracking-wider font-semibold uppercase transition-all duration-300 ${
                       selectedTone === tone
-                        ? "text-black bg-gold-400"
-                        : "text-zinc-400 hover:text-white"
+                        ? "text-black bg-gold-400 shadow-sm"
+                        : "text-zinc-500 hover:text-zinc-900"
                     }`}
                   >
                     {tone}
@@ -186,16 +186,16 @@ export default function GraniteGrid() {
 
             {/* Texture Filter */}
             <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
-              <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-500 uppercase mr-2">Texture:</span>
-              <div className="flex bg-zinc-950/50 p-1 border border-zinc-900 rounded">
+              <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-400 uppercase mr-2">Texture:</span>
+              <div className="flex bg-white p-1 border border-zinc-200/80 rounded">
                 {(["all", "veined", "crystalline"] as const).map((texture) => (
                   <button
                     key={texture}
                     onClick={() => setSelectedTexture(texture)}
                     className={`px-3 py-1.5 rounded text-[10px] tracking-wider font-semibold uppercase transition-all duration-300 ${
                       selectedTexture === texture
-                        ? "text-black bg-gold-400"
-                        : "text-zinc-400 hover:text-white"
+                        ? "text-black bg-gold-400 shadow-sm"
+                        : "text-zinc-500 hover:text-zinc-900"
                     }`}
                   >
                     {texture}
@@ -214,24 +214,24 @@ export default function GraniteGrid() {
               <div
                 key={slab.id}
                 onClick={() => setActiveSlabModal(slab)}
-                className="group cursor-pointer rounded-lg overflow-hidden border border-zinc-800 bg-[#0b0b0f] transition-all duration-500 hover:-translate-y-2 flex flex-col shadow-lg"
+                className="group cursor-pointer rounded-lg overflow-hidden border border-zinc-200/80 bg-white transition-all duration-500 hover:-translate-y-2 flex flex-col shadow-sm hover:shadow-md"
                 style={{
-                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.5)",
+                  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.03)",
                 }}
               >
                 {/* Slab Card Image Container */}
-                <div className="relative w-full aspect-[4/5] bg-zinc-950 overflow-hidden border-b border-zinc-900">
+                <div className="relative w-full aspect-[4/5] bg-zinc-100 overflow-hidden border-b border-zinc-200">
                   <Image
                     src={slab.image}
                     alt={slab.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-[0.85] group-hover:brightness-100"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-[0.9] group-hover:brightness-100"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                   
                   {/* Subtle hover detail indicator */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="px-4 py-2 text-[10px] tracking-[0.3em] font-bold text-black bg-gradient-to-r from-gold-500 to-gold-300 rounded uppercase shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                       INSPECT SPECIFICATIONS
                     </span>
@@ -239,26 +239,26 @@ export default function GraniteGrid() {
                 </div>
 
                 {/* Card Text Info */}
-                <div className="p-6 flex flex-col justify-between flex-grow">
+                <div className="p-6 flex flex-col justify-between flex-grow bg-white">
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-[9px] tracking-[0.25em] text-gold-400 font-bold uppercase">
+                      <span className="text-[9px] tracking-[0.25em] text-gold-600 font-bold uppercase">
                         {slab.source}
                       </span>
-                      <span className="text-[9px] tracking-widest text-zinc-500 uppercase">
+                      <span className="text-[9px] tracking-widest text-zinc-400 uppercase">
                         {slab.texture}
                       </span>
                     </div>
-                    <h3 className="font-serif text-xl font-bold tracking-widest text-white uppercase group-hover:text-gold-300 transition-colors duration-300 mb-2">
+                    <h3 className="font-serif text-xl font-bold tracking-widest text-zinc-800 group-hover:text-gold-600 transition-colors duration-300 mb-2">
                       {slab.name}
                     </h3>
-                    <p className="text-zinc-400 text-[11px] leading-relaxed line-clamp-2 font-light">
+                    <p className="text-zinc-500 text-[11px] leading-relaxed line-clamp-2 font-light">
                       {slab.description}
                     </p>
                   </div>
 
                   {/* Technical Summary List */}
-                  <div className="mt-4 pt-4 border-t border-zinc-900 flex justify-between text-[10px] tracking-wider text-zinc-500 uppercase">
+                  <div className="mt-4 pt-4 border-t border-zinc-100 flex justify-between text-[10px] tracking-wider text-zinc-400 uppercase">
                     <span>MOHS: {slab.specs.mohs}</span>
                     <span>DENSITY: {slab.specs.density.split(" ")[0]}</span>
                   </div>
@@ -267,8 +267,8 @@ export default function GraniteGrid() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 border border-dashed border-zinc-800 rounded-lg">
-            <span className="text-zinc-500 text-xs tracking-widest uppercase">
+          <div className="text-center py-20 border border-dashed border-zinc-200 rounded-lg">
+            <span className="text-zinc-400 text-xs tracking-widest uppercase">
               No classifications match your criteria.
             </span>
           </div>

@@ -210,11 +210,11 @@ export default function CorridorFlythrough({ onComplete }: { onComplete: () => v
             alt="Luxury Corridor Background"
             fill
             priority
-            className="object-cover opacity-35 filter brightness-[0.4] contrast-[1.1] saturate-[0.85]"
+            className="object-cover opacity-75 filter brightness-[0.85] contrast-[1.0] saturate-[0.9]"
           />
           {/* Subtle vignette shading */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-transparent to-[#060608] opacity-90" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-transparent to-[#060608] opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060608] via-transparent to-[#060608] opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#060608] via-transparent to-[#060608] opacity-40" />
         </div>
 
         {/* 3D Perspective Viewport */}

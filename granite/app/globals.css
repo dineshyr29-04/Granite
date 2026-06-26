@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #060608;
-  --foreground: #f3f4f6;
+  --background: #ffffff;
+  --foreground: #0f0f12;
   
   --color-gold-50: #fbf7e6;
   --color-gold-100: #f5eabf;
@@ -37,12 +37,12 @@
 
 html {
   scroll-behavior: smooth;
-  background-color: #060608;
+  background-color: #ffffff;
 }
 
 body {
-  background-color: #060608;
-  color: #f3f4f6;
+  background-color: #ffffff;
+  color: #0f0f12;
   font-family: 'Montserrat', sans-serif;
   overflow-x: hidden;
 }
@@ -53,16 +53,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0b0f;
+  background: #f4f4f7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2a2218;
+  background: #d1c4b2;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #d6aa63;
+  background: #ca914b;
 }
 
 /* Metallic gold text and glow effects */
