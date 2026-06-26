@@ -158,15 +158,15 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
           >
             {scene.id === "exterior" ? (
                /* Hero Glassmorphic Title */
-               <div className="flex flex-col items-center text-center max-w-3xl pt-20">
-                 <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white tracking-[0.08em] mb-6 drop-shadow-2xl">
+               <div className="flex flex-col items-center text-center max-w-4xl pt-20">
+                 <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-light text-white tracking-[0.1em] mb-8 drop-shadow-2xl">
                    {scene.title}
                  </h1>
-                 <p className="text-[11px] md:text-xs tracking-[0.42em] uppercase text-white/90 font-medium mb-12 bg-white/10 backdrop-blur-xl px-8 py-4 border border-white/20 rounded-sm shadow-2xl">
+                 <p className="text-[10px] md:text-xs tracking-[0.4em] uppercase text-white font-medium mb-16 drop-shadow-lg">
                    {scene.subtitle}
                  </p>
-                 <div className="w-[1px] h-16 bg-gradient-to-b from-white/60 to-transparent animate-pulse" />
-                 <span className="mt-6 text-[9px] tracking-[0.3em] uppercase text-white/50 font-medium">Scroll to explore</span>
+                 <div className="w-[1px] h-20 bg-gradient-to-b from-white/80 to-transparent animate-pulse shadow-xl" />
+                 <span className="mt-8 text-[9px] tracking-[0.4em] uppercase text-white/80 font-semibold drop-shadow-md">Scroll to explore</span>
                </div>
             ) : (
               /* High-End Room Glassmorphic Card */

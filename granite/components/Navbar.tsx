@@ -28,10 +28,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 border-b ${
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-700 border-b ${
         isScrolledPastWalkthrough
           ? "bg-white/80 backdrop-blur-lg border-stone-200 py-4 shadow-sm"
-          : "bg-black/20 backdrop-blur-md border-white/10 py-6"
+          : "bg-transparent border-transparent py-8"
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
@@ -80,10 +80,10 @@ export default function Navbar() {
           ))}
           <li>
             <button
-              className={`px-6 py-2.5 text-[10px] tracking-[0.25em] uppercase font-medium transition-all duration-300 ${
+              className={`px-6 py-3 text-[9px] tracking-[0.3em] uppercase font-medium transition-all duration-500 ${
                 isScrolledPastWalkthrough
-                  ? "bg-gold-600 text-white hover:bg-gold-700"
-                  : "bg-white/10 text-white border border-white/30 hover:bg-white/20"
+                  ? "bg-stone-900 text-white hover:bg-stone-800"
+                  : "bg-transparent text-white border border-white/50 hover:bg-white hover:text-black"
               }`}
             >
               Get a Quote
