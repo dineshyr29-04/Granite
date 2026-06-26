@@ -1,25 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0f0f12;
-  
-  --color-gold-50: #fbf7e6;
-  --color-gold-100: #f5eabf;
-  --color-gold-200: #eddba6;
-  --color-gold-300: #e2c382;
-  --color-gold-400: #d6aa63;
-  --color-gold-500: #ca914b;
-  --color-gold-600: #bd793b;
-  --color-gold-700: #a76030;
-  --color-gold-800: #8f4a27;
-  --color-gold-900: #783820;
-  --color-gold-950: #461c0e;
+  --background: #faf9f6;
+  --foreground: #1a1814;
+
+  --color-gold-50:  #fdf8ee;
+  --color-gold-100: #f8edcf;
+  --color-gold-200: #f0d99e;
+  --color-gold-300: #e6c06b;
+  --color-gold-400: #daa84a;
+  --color-gold-500: #c8913a;
+  --color-gold-600: #b07530;
+  --color-gold-700: #8f5b27;
+  --color-gold-800: #744620;
+  --color-gold-900: #5f391c;
+  --color-gold-950: #3a1e0b;
+
+  --color-stone-50:  #f9f7f4;
+  --color-stone-100: #f0ece5;
+  --color-stone-200: #e4ddd2;
+  --color-stone-300: #cfc4b5;
+  --color-stone-400: #b5a795;
+  --color-stone-500: #9a8d7c;
+  --color-stone-600: #7e7265;
+  --color-stone-700: #655a50;
+  --color-stone-800: #4e4540;
+  --color-stone-900: #3b3430;
 }
 
 @theme {
-  --color-gold-50: var(--color-gold-50);
+  --color-gold-50:  var(--color-gold-50);
   --color-gold-100: var(--color-gold-100);
   --color-gold-200: var(--color-gold-200);
   --color-gold-300: var(--color-gold-300);
@@ -30,104 +41,290 @@
   --color-gold-800: var(--color-gold-800);
   --color-gold-900: var(--color-gold-900);
   --color-gold-950: var(--color-gold-950);
-  
-  --font-serif: 'Cinzel', serif;
-  --font-sans: 'Montserrat', sans-serif;
+
+  --color-stone-50:  var(--color-stone-50);
+  --color-stone-100: var(--color-stone-100);
+  --color-stone-200: var(--color-stone-200);
+  --color-stone-300: var(--color-stone-300);
+  --color-stone-400: var(--color-stone-400);
+  --color-stone-500: var(--color-stone-500);
+  --color-stone-600: var(--color-stone-600);
+  --color-stone-700: var(--color-stone-700);
+  --color-stone-800: var(--color-stone-800);
+  --color-stone-900: var(--color-stone-900);
+
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-sans:  'Jost', sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-  background-color: #ffffff;
-}
+/* === Base === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: #ffffff;
-  color: #0f0f12;
-  font-family: 'Montserrat', sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Webkit scrollbar for premium look */
-::-webkit-scrollbar {
-  width: 8px;
-}
+/* === Premium Scrollbar === */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f0ece5; }
+::-webkit-scrollbar-thumb { background: #c8913a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #b07530; }
 
-::-webkit-scrollbar-track {
-  background: #f4f4f7;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d1c4b2;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #ca914b;
-}
-
-/* Metallic gold text and glow effects */
-.gold-text-metallic {
-  background: linear-gradient(
-    135deg,
-    #bf953f 0%,
-    #fcf6ba 25%,
-    #b38728 50%,
-    #fbf5b7 75%,
-    #aa771c 100%
-  );
+/* === Gold Text Metallic === */
+.gold-text {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 30%, #b38728 55%, #fbf5b7 80%, #aa771c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
 }
 
-.gold-glow {
-  text-shadow: 0 0 15px rgba(214, 170, 99, 0.4), 0 0 30px rgba(214, 170, 99, 0.2);
+/* === Section Label === */
+.section-label {
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-gold-600);
 }
 
-.gold-glow-border {
-  box-shadow: 0 0 15px rgba(214, 170, 99, 0.2), inset 0 0 10px rgba(214, 170, 99, 0.1);
+/* === Divider Line === */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
 }
 
-.gold-border {
-  border-color: rgba(214, 170, 99, 0.3);
+/* === Luxury Nav === */
+.nav-link {
+  font-family: 'Jost', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #5a4f44;
+  transition: color 0.3s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.nav-link:hover { color: var(--color-gold-600); }
+
+/* === Room Scene Cards === */
+.room-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.room-card img {
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.room-card:hover img { transform: scale(1.04); }
+
+/* === Granite Tile === */
+.granite-tile {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #e4ddd2;
+  transition: box-shadow 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+}
+.granite-tile:hover {
+  box-shadow: 0 16px 48px -8px rgba(0,0,0,0.15), 0 0 0 1px rgba(200,145,58,0.4);
+  transform: translateY(-4px);
+  border-color: rgba(200,145,58,0.5);
+}
+.granite-tile img {
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.granite-tile:hover img { transform: scale(1.06); }
+
+/* === Modal === */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,24,20,0.82);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+.modal-content {
+  background: #faf9f6;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #e4ddd2;
+  animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.gold-border-hover:hover {
-  border-color: rgba(214, 170, 99, 0.7);
-  box-shadow: 0 0 20px rgba(214, 170, 99, 0.2);
+/* === Walkthrough Sticky Scene === */
+.walkthrough-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* Glassmorphism containers */
-.glass-panel {
-  background: rgba(11, 11, 15, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* === Room Transition === */
+.room-scene {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
-.glass-panel-gold {
-  background: rgba(11, 11, 15, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(214, 170, 99, 0.25);
+/* === Button Primary === */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--color-gold-600);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.btn-primary:hover { background: var(--color-gold-500); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+/* === Button Ghost === */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--color-gold-700);
+  background: transparent;
+  border: 1px solid var(--color-gold-400);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-ghost:hover {
+  background: var(--color-gold-600);
+  color: #fff;
+  border-color: var(--color-gold-600);
 }
 
-/* 3D Perspective and Flythrough classes */
-.perspective-container {
-  perspective: 1200px;
-  perspective-origin: 50% 45%;
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-.corridor-wrapper {
-  transform-style: preserve-3d;
+.animate-fadeInUp { animation: fadeInUp 0.7s ease forwards; }
+.animate-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.animate-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 2.5s infinite;
 }
 
-.wall-slab-left {
-  transform: rotateY(90deg) translateZ(-400px);
+/* === Scroll reveal helper (JS adds .is-visible) === */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* === GV Logo Mark === */
+.gv-mark {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(200, 145, 58, 0.6);
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  flex-shrink: 0;
+}
+.gv-mark span {
+  transform: rotate(-45deg);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gold-600);
 }
 
-.wall-slab-right {
-  transform: rotateY(-90deg) translateZ(-400px);
+/* === Room nav dots === */
+.room-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.room-dot.active {
+  background: var(--color-gold-400);
+  border-color: var(--color-gold-400);
+  transform: scale(1.3);
 }
 
+/* === Granite feature strip === */
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-stone-600);
+  padding: 5px 10px;
+  border: 1px solid var(--color-stone-200);
+  background: #fff;
+}

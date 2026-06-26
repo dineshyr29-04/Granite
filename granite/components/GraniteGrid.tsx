@@ -2,309 +2,357 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import GraniteModal from "./GraniteModal";
 
-interface SlabSpecs {
-  mohs: string;
-  density: string;
-  compressive: string;
-  absorption: string;
-  recommended: string[];
-}
-
-interface SlabData {
+interface Granite {
   id: string;
   name: string;
+  category: string;
+  origin: string;
   description: string;
-  source: string;
-  image: string;
-  features: string[];
-  color: string;
-  tone: "dark" | "light" | "colored";
-  texture: "veined" | "crystalline";
-  category: "BLACK" | "WHITE" | "GREY" | "BROWN" | "EXOTIC";
   finish: string;
-  specs: SlabSpecs;
+  thickness: string;
+  application: string[];
+  features: string[];
+  image: string;
+  featured?: boolean;
 }
 
-const GRANITE_DATA: SlabData[] = [
+const GRANITES: Granite[] = [
   {
     id: "cosmic-black",
-    name: "COSMIC BLACK",
-    description: "Deep black stone with flowing golden veins of quartz, offering unparalleled luxury.",
-    source: "Brazil",
+    name: "Cosmic Black",
+    category: "Black",
+    origin: "Brazil",
+    description: "Intense deep-black stone with luminous golden veins of quartz and feldspar. Book-matched for a mirror-perfect symmetrical finish. The pinnacle of dramatic luxury design.",
+    finish: "High Polish",
+    thickness: "18mm / 20mm",
+    application: ["Feature Walls", "Countertops", "Flooring", "Staircase"],
+    features: ["Book-Matched", "Acid Proof", "Scratch Resistant", "High Density"],
     image: "/cosmic_black.png",
-    features: ["High Polish", "Scratch Resistant", "Acid Proof"],
-    color: "rgba(214, 170, 99, 0.8)",
-    tone: "dark",
-    texture: "veined",
-    category: "BLACK",
-    finish: "Polished",
-    specs: {
-      mohs: "6.5",
-      density: "2,680 kg/m³",
-      compressive: "22,500 psi",
-      absorption: "0.15%",
-      recommended: ["Kitchen Countertops", "Flooring", "Accent Walls", "Fireplace Surrounds"],
-    },
+    featured: true,
   },
   {
     id: "alaska-white",
-    name: "ALASKA WHITE",
-    description: "Elegant white granite with natural pewter veining and dark biotite crystals.",
-    source: "India",
+    name: "Alaska White",
+    category: "White",
+    origin: "India",
+    description: "Frosty arctic-white granite with intricate pewter veining and dark biotite crystal clusters. Bright, versatile, and timelessly elegant in any space.",
+    finish: "High Polish / Leathered",
+    thickness: "18mm / 20mm",
+    application: ["Countertops", "Backsplash", "Bathrooms", "Reception Desks"],
+    features: ["Stain Resistant", "Heat Proof", "Food Safe", "Versatile"],
     image: "/alaska_white.png",
-    features: ["Bright Aesthetic", "Versatile Design", "Frost Texture"],
-    color: "rgba(200, 200, 200, 0.8)",
-    tone: "light",
-    texture: "crystalline",
-    category: "WHITE",
-    finish: "Polished",
-    specs: {
-      mohs: "6.5",
-      density: "2,650 kg/m³",
-      compressive: "21,000 psi",
-      absorption: "0.18%",
-      recommended: ["Kitchen Countertops", "Outdoor Kitchens", "High-Traffic Flooring", "Accent Walls"],
-    },
   },
   {
     id: "titanium-grey",
-    name: "TITANIUM GREY",
-    description: "Modern grey texture with natural swirls of quartz and dark charcoal for contemporary interiors.",
-    source: "India",
+    name: "Titanium Grey",
+    category: "Grey",
+    origin: "India",
+    description: "A sophisticated contemporary grey with natural swirls of white quartz and dark charcoal mineral patterns. Engineered for high-traffic and high-moisture environments.",
+    finish: "Flamed / Polished",
+    thickness: "18mm",
+    application: ["Spa Bathrooms", "Outdoor Paving", "Commercial Floors", "Facades"],
+    features: ["Anti-Slip", "Waterproof", "Frost Resistant", "Low Maintenance"],
     image: "/titanium_grey.png",
-    features: ["Quartz Blend", "Extremely Durable", "Contemporary Polish"],
-    color: "rgba(120, 120, 120, 0.8)",
-    tone: "dark",
-    texture: "veined",
-    category: "GREY",
-    finish: "Honed",
-    specs: {
-      mohs: "6.5",
-      density: "2,660 kg/m³",
-      compressive: "21,800 psi",
-      absorption: "0.16%",
-      recommended: ["Modern Fireplaces", "Lobby Cladding", "Living Area Flooring"],
-    },
   },
   {
-    id: "coffee-brown",
-    name: "COFFEE BROWN",
-    description: "Rich dark brown base with black aggregates and speckles of copper and tan minerals.",
-    source: "India",
-    image: "/coffee_brown.png",
-    features: ["Warm Aesthetic", "Heavy Traffic Durable", "Low Porosity"],
-    color: "rgba(139, 90, 43, 0.8)",
-    tone: "dark",
-    texture: "crystalline",
-    category: "BROWN",
-    finish: "Leathered",
-    specs: {
-      mohs: "6.0",
-      density: "2,630 kg/m³",
-      compressive: "20,500 psi",
-      absorption: "0.20%",
-      recommended: ["Kitchen Countertops", "High-Traffic Corridors", "Luxury Bar Counters"],
-    },
-  },
-  {
-    id: "emerald-pearl",
-    name: "EMERALD PEARL",
-    description: "Deep dark green-black base with shimmering, reflective emerald green crystalline feldspar clusters.",
-    source: "Norway",
-    image: "/emerald_pearl.png",
-    features: ["High Gloss", "Shimmering Crystals", "Feldspar Blend"],
-    color: "rgba(16, 185, 129, 0.8)",
-    tone: "dark",
-    texture: "crystalline",
-    category: "EXOTIC",
-    finish: "High-Gloss Polished",
-    specs: {
-      mohs: "6.5",
-      density: "2,700 kg/m³",
-      compressive: "23,000 psi",
-      absorption: "0.11%",
-      recommended: ["Bespoke Furniture", "Luxury Bathroom Vanities", "Accent Wall Cladding"],
-    },
+    id: "patagonia",
+    name: "Patagonia",
+    category: "Exotic",
+    origin: "Brazil",
+    description: "A geological masterpiece — translucent cream quartz combined with dark obsidian patches and golden feldspar fragments. Unique like a fingerprint, striking like art.",
+    finish: "High Polish",
+    thickness: "20mm / 25mm",
+    application: ["Headboard Walls", "Luxury Countertops", "Art Installations", "Hotel Lobbies"],
+    features: ["Translucent Quartz", "Book-Matched", "Ultra-Rare", "Collector's Grade"],
+    image: "/patagonia.png",
+    featured: true,
   },
   {
     id: "blue-bahia",
-    name: "BLUE BAHIA",
-    description: "Rare exotic sodalite masterpiece featuring vibrant royal blue tones accented by delicate white and gold waves.",
-    source: "Brazil",
+    name: "Blue Bahia",
+    category: "Exotic",
+    origin: "Brazil",
+    description: "A rare sodalite mineral with deep royal blue that shifts to violet in different light. Interlaced with white quartz and golden feldspar veins. Exceptionally rare.",
+    finish: "High Polish",
+    thickness: "20mm",
+    application: ["Decorative Walls", "Luxury Furniture", "Art Pieces", "Custom Counters"],
+    features: ["Sodalite Mineral", "Color-Shifting", "Ultra-Rare", "Heirloom Grade"],
     image: "/blue_bahia.png",
-    features: ["Exotic Sodalite", "Ultra Premium", "Vibrant Polish"],
-    color: "rgba(59, 130, 246, 0.8)",
-    tone: "colored",
-    texture: "veined",
-    category: "EXOTIC",
-    finish: "Polished",
-    specs: {
-      mohs: "6.0",
-      density: "2,580 kg/m³",
-      compressive: "18,200 psi",
-      absorption: "0.28%",
-      recommended: ["Backlit Accent Panels", "Luxury Fireplace Surrounds", "Powder Room Counters"],
-    },
+  },
+  {
+    id: "coffee-brown",
+    name: "Coffee Brown",
+    category: "Brown",
+    origin: "India",
+    description: "Warm espresso-brown granite with soft cream swirls and golden mineral sparkle. Radiates warmth and earthiness — perfect for cozy, organic luxury interiors.",
+    finish: "High Polish / Leathered",
+    thickness: "18mm / 20mm",
+    application: ["Kitchen Counters", "Dining Surfaces", "Library Walls", "Bar Tops"],
+    features: ["Warm Tones", "Scratch Resistant", "High Polish", "Eco-Quarried"],
+    image: "/coffee_brown.png",
+  },
+  {
+    id: "emerald-pearl",
+    name: "Emerald Pearl",
+    category: "Exotic",
+    origin: "Norway",
+    description: "Norwegian Labradorite granite with iridescent pearl and emerald-green mineral deposits. The stone displays a shifting labradorescence — a living, breathing surface.",
+    finish: "High Polish",
+    thickness: "18mm / 20mm",
+    application: ["Accent Walls", "Bar Counters", "Luxury Reception", "Spa Floors"],
+    features: ["Labradorescence", "Iridescent", "Norwegian Heritage", "Premium Grade"],
+    image: "/emerald_pearl.png",
   },
 ];
 
-type CategoryFilter = "ALL" | "BLACK" | "WHITE" | "GREY" | "BROWN" | "EXOTIC";
+const CATEGORIES = ["All", "Black", "White", "Grey", "Brown", "Exotic"];
 
-export default function GraniteGrid() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>("ALL");
-  const [activeSlabModal, setActiveSlabModal] = useState<SlabData | null>(null);
+interface Props {
+  highlightId?: string | null;
+}
 
-  // Filter items
-  const filteredGranites = GRANITE_DATA.filter((slab) => {
-    const matchesSearch =
-      slab.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      slab.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      slab.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-    const matchesCategory = selectedCategory === "ALL" || slab.category === selectedCategory;
+export default function GraniteGrid({ highlightId }: Props) {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedGranite, setSelectedGranite] = useState<Granite | null>(null);
 
-    return matchesSearch && matchesCategory;
-  });
+  const filtered = activeCategory === "All"
+    ? GRANITES
+    : GRANITES.filter((g) => g.category === activeCategory);
 
   return (
-    <section id="collection" className="w-full bg-white py-24 px-6 md:px-16 border-t border-zinc-100 relative z-20">
-      
-      {/* Visual background lights */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
-
+    <section id="collection" className="w-full bg-stone-50 py-24 px-6 md:px-16 relative z-20 border-t border-stone-200">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-16 select-none">
-          <span className="text-[10px] tracking-[0.4em] text-gold-500 font-extrabold uppercase mb-2">
-            OUR COLLECTION
-          </span>
-          <h2 className="font-serif text-4xl md:text-5xl font-normal tracking-widest text-zinc-900 uppercase mb-4">
-            Explore Our Premium Granites
-          </h2>
-          <div className="h-[1.5px] w-24 bg-gradient-to-r from-transparent via-gold-400 to-transparent mb-6" />
-          <p className="text-zinc-500 text-xs md:text-sm tracking-wider max-w-xl leading-relaxed font-light">
-            Browse our complete inventory in standard grid preview. Click on any classification panel to inspect structural metrics, finishes, and applications.
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 reveal">
+          <div>
+            <span className="section-label mb-3 block">Our Collection</span>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-light text-zinc-900 leading-tight">
+              Curated Granite<br />
+              <em className="font-light not-italic text-stone-500">Selection</em>
+            </h2>
+          </div>
+          <p className="text-stone-500 text-sm leading-relaxed max-w-xs font-light">
+            Every slab individually inspected. Sourced from verified quarries across Brazil, India, and Norway.
           </p>
         </div>
 
-        {/* Filter & Search Bar Controls */}
-        <div className="bg-zinc-50 rounded-lg p-6 mb-12 flex flex-col lg:flex-row gap-6 items-center justify-between shadow-sm border border-zinc-200/60">
-          
-          {/* Search Box */}
-          <div className="relative w-full lg:w-80">
-            <span className="absolute inset-y-0 left-4 flex items-center text-zinc-400">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </span>
-            <input
-              type="text"
-              placeholder="Search our catalog..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-zinc-200 rounded py-3 pl-12 pr-4 text-xs tracking-wider text-zinc-800 placeholder-zinc-400 focus:outline-none focus:border-gold-500/50 transition-all duration-300 font-medium"
-            />
-          </div>
-
-          {/* Categories Tab Filters */}
-          <div className="flex flex-wrap gap-2 items-center justify-start lg:justify-end w-full lg:w-auto">
-            {(["ALL", "BLACK", "WHITE", "GREY", "BROWN", "EXOTIC"] as CategoryFilter[]).map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded text-[10px] tracking-widest font-semibold uppercase transition-all duration-300 cursor-pointer ${
-                  selectedCategory === category
-                    ? "text-black bg-gold-400 shadow-sm"
-                    : "text-zinc-500 hover:text-zinc-900 bg-white border border-zinc-200"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mb-10 reveal reveal-delay-1">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className="px-5 py-2 text-[10px] tracking-[0.2em] uppercase font-medium cursor-pointer transition-all duration-300 border"
+              style={{
+                background: activeCategory === cat ? "var(--color-gold-600)" : "#fff",
+                color: activeCategory === cat ? "#fff" : "#7e7265",
+                borderColor: activeCategory === cat ? "var(--color-gold-600)" : "#e4ddd2",
+              }}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
-        {/* Slabs Grid */}
-        {filteredGranites.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {filteredGranites.map((slab) => (
-              <div
-                key={slab.id}
-                onClick={() => setActiveSlabModal(slab)}
-                className="group cursor-pointer rounded-lg overflow-hidden border border-zinc-200/80 bg-white transition-all duration-500 hover:-translate-y-2 flex flex-col shadow-sm hover:shadow-md"
-                style={{
-                  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.02)",
-                }}
-              >
-                {/* Slab Card Image Container */}
-                <div className="relative w-full aspect-[4/5] bg-zinc-100 overflow-hidden border-b border-zinc-200">
-                  <Image
-                    src={slab.image}
-                    alt={slab.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-[0.92] group-hover:brightness-100"
-                  />
-                  {/* Sheen Overlay effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent z-10 pointer-events-none transform translate-y-full group-hover:translate-y-[-100%] transition-transform duration-1000" />
-                  
-                  {/* Subtle hover detail indicator */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/45 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="px-4 py-2 text-[9px] tracking-[0.3em] font-bold text-black bg-gradient-to-r from-gold-500 to-gold-300 rounded uppercase shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      View Details →
-                    </span>
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {filtered.map((granite, idx) => (
+            <div
+              key={granite.id}
+              className={`granite-tile reveal reveal-delay-${Math.min(idx % 4 + 1, 4)} ${
+                granite.id === highlightId ? "ring-2 ring-gold-400" : ""
+              }`}
+              onClick={() => setSelectedGranite(granite)}
+            >
+              {/* Slab image */}
+              <div className="relative w-full overflow-hidden" style={{ height: "260px" }}>
+                <Image
+                  src={granite.image}
+                  alt={granite.name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  className="object-cover"
+                />
+                {granite.featured && (
+                  <div className="absolute top-3 left-3 bg-gold-600 text-white text-[8px] tracking-[0.2em] uppercase font-medium px-2.5 py-1">
+                    Featured
                   </div>
-                </div>
-
-                {/* Card Text Info */}
-                <div className="p-5 flex flex-col justify-between flex-grow bg-white">
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-[9px] tracking-[0.25em] text-gold-600 font-bold uppercase">
-                        {slab.source}
-                      </span>
-                      <span className="text-[9px] tracking-widest text-zinc-400 uppercase font-light">
-                        {slab.finish}
-                      </span>
-                    </div>
-                    <h3 className="font-serif text-lg font-bold tracking-widest text-zinc-800 group-hover:text-gold-600 transition-colors duration-300 mb-2 uppercase">
-                      {slab.name}
-                    </h3>
-                    <p className="text-zinc-500 text-[10px] leading-relaxed line-clamp-2 font-light">
-                      {slab.description}
-                    </p>
-                  </div>
-
-                  {/* Card bottom specifications summary */}
-                  <div className="mt-4 pt-3 border-t border-zinc-100 flex justify-between text-[9px] tracking-wider text-zinc-400 uppercase font-light">
-                    <span>APP: {slab.specs.recommended[0].split(" ")[0]}</span>
-                    <span>MOHS: {slab.specs.mohs}</span>
-                  </div>
+                )}
+                <div className="absolute top-3 right-3 bg-white/90 text-stone-600 text-[8px] tracking-[0.15em] uppercase font-medium px-2.5 py-1">
+                  {granite.category}
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20 border border-dashed border-zinc-200 rounded-lg">
-            <span className="text-zinc-400 text-xs tracking-widest uppercase">
-              No classifications match your criteria.
-            </span>
-          </div>
-        )}
 
+              {/* Info */}
+              <div className="bg-white p-5">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="font-serif text-lg font-light text-zinc-900 leading-tight">
+                      {granite.name}
+                    </h3>
+                    <p className="text-[10px] tracking-[0.2em] uppercase text-stone-400 font-medium mt-0.5">
+                      {granite.origin}
+                    </p>
+                  </div>
+                  <span className="text-[9px] tracking-wider text-stone-400 border border-stone-200 px-2 py-1 mt-0.5 font-medium uppercase whitespace-nowrap">
+                    {granite.finish}
+                  </span>
+                </div>
+
+                <p className="text-xs text-stone-500 leading-relaxed font-light mb-4 line-clamp-2">
+                  {granite.description}
+                </p>
+
+                {/* Application tags */}
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {granite.application.slice(0, 2).map((app) => (
+                    <span key={app} className="text-[8px] tracking-wider uppercase font-medium text-stone-500 border border-stone-200 px-2 py-0.5">
+                      {app}
+                    </span>
+                  ))}
+                  {granite.application.length > 2 && (
+                    <span className="text-[8px] tracking-wider uppercase font-medium text-stone-400">
+                      +{granite.application.length - 2} more
+                    </span>
+                  )}
+                </div>
+
+                <button className="w-full py-2.5 text-[10px] tracking-[0.2em] uppercase font-medium text-gold-700 border border-gold-300 hover:bg-gold-600 hover:text-white hover:border-gold-600 transition-all duration-300 cursor-pointer">
+                  View Details →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="flex justify-center mt-14 reveal">
+          <div className="text-center">
+            <p className="text-stone-400 text-xs font-light mb-4">
+              Looking for something specific? We source custom slabs on request.
+            </p>
+            <button
+              className="btn-ghost"
+              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              Request Custom Slab
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Specifications Modal Overlay */}
-      <GraniteModal
-        key={activeSlabModal?.id || "modal"}
-        slab={activeSlabModal}
-        onClose={() => setActiveSlabModal(null)}
-      />
+      {/* === DETAIL MODAL === */}
+      {selectedGranite && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedGranite(null);
+          }}
+        >
+          <div className="modal-content">
+            <div className="flex flex-col md:flex-row">
+              {/* Image side */}
+              <div className="relative md:w-[45%] flex-shrink-0" style={{ minHeight: "320px" }}>
+                <Image
+                  src={selectedGranite.image}
+                  alt={selectedGranite.name}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                {selectedGranite.featured && (
+                  <div className="absolute top-4 left-4 bg-gold-600 text-white text-[8px] tracking-[0.2em] uppercase font-medium px-3 py-1.5">
+                    Featured Collection
+                  </div>
+                )}
+              </div>
+
+              {/* Info side */}
+              <div className="flex-1 p-8 md:p-10 overflow-y-auto">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="section-label">{selectedGranite.category} Granite</span>
+                  <button
+                    onClick={() => setSelectedGranite(null)}
+                    className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-stone-700 transition-colors border border-stone-200 hover:border-stone-400 cursor-pointer text-lg"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <h2 className="font-serif text-4xl font-light text-zinc-900 mb-1">
+                  {selectedGranite.name}
+                </h2>
+                <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400 font-medium mb-5">
+                  Sourced from {selectedGranite.origin}
+                </p>
+
+                <div className="divider-gold mb-5" />
+
+                <p className="text-stone-600 text-sm leading-relaxed font-light mb-6">
+                  {selectedGranite.description}
+                </p>
+
+                {/* Spec grid */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-stone-400 block mb-1">Finish</span>
+                    <span className="text-sm text-zinc-800 font-light">{selectedGranite.finish}</span>
+                  </div>
+                  <div>
+                    <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-stone-400 block mb-1">Thickness</span>
+                    <span className="text-sm text-zinc-800 font-light">{selectedGranite.thickness}</span>
+                  </div>
+                  <div className="col-span-2">
+                    <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-stone-400 block mb-2">Applications</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {selectedGranite.application.map((a) => (
+                        <span key={a} className="feature-badge">✦ {a}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="bg-stone-50 p-4 mb-6 border border-stone-200">
+                  <span className="text-[9px] tracking-[0.2em] uppercase font-medium text-stone-400 block mb-3">Key Properties</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {selectedGranite.features.map((f) => (
+                      <div key={f} className="flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gold-500 flex-shrink-0" />
+                        <span className="text-xs text-stone-600 font-light">{f}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="flex gap-3 flex-wrap">
+                  <button
+                    className="btn-primary flex-1 justify-center"
+                    onClick={() => {
+                      setSelectedGranite(null);
+                      setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100);
+                    }}
+                  >
+                    Request Sample
+                  </button>
+                  <button
+                    className="btn-ghost"
+                    onClick={() => {
+                      setSelectedGranite(null);
+                      setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 100);
+                    }}
+                  >
+                    Get Quote
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
