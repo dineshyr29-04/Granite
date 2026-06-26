@@ -8,7 +8,6 @@ import GraniteGrid from "@/components/GraniteGrid";
 
 export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [walkthroughProgress, setWalkthroughProgress] = useState(0);
 
   // Scroll reveal for sections below the cinematic walkthrough
   useEffect(() => {
@@ -38,9 +37,7 @@ export default function Home() {
     (e.target as HTMLFormElement).reset();
   };
 
-  // Header should only appear when the cinematic walkthrough is mostly complete
-  // i.e. when we are at or past the last scene.
-  const showHeader = walkthroughProgress > 0.95;
+
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "#faf9f6" }}>
@@ -50,7 +47,7 @@ export default function Home() {
 
       <main>
         {/* ========== CINEMATIC WALKTHROUGH ========== */}
-        <CinematicWalkthrough onProgress={setWalkthroughProgress} />
+        <CinematicWalkthrough onProgress={() => {}} />
 
         {/* ========== GRANITE COLLECTION GRID ========== */}
         <GraniteGrid highlightId={null} />
