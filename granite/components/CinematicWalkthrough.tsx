@@ -170,7 +170,8 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
     const end = i === N - 1 ? 1 : (i + 1) / N;
     const range = end - start;
     const sp = Math.max(0, Math.min(1, (p - start) / range));
-    return 1.0 + sp * 0.2; // scale from 1.0 → 1.2
+    // Subtle architectural pan (1.0 to 1.05) rather than aggressive zoom
+    return 1.0 + sp * 0.05; 
   }
 
   // Active scene index (for progress dots)
@@ -183,7 +184,11 @@ export default function CinematicWalkthrough({ onProgress }: Props) {
       style={{ height: "600vh", background: "#0a0a0a" }}
     >
       {/* ─── Sticky viewport ──────────────────────────────────────────────── */}
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-black">
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden bg-[#0a0a0a]">
+
+        {/* ─── Architectural Frame (Immersive Window Effect) ────────────── */}
+        <div className="pointer-events-none absolute inset-0 z-[25] border-[12px] md:border-[32px] border-[#0a0a0a]" />
+        <div className="pointer-events-none absolute inset-0 z-[25] shadow-[inset_0_0_120px_rgba(0,0,0,0.8)] md:shadow-[inset_0_0_250px_rgba(0,0,0,0.95)]" />
 
         {/* ─── Scene layers ─────────────────────────────────────────────── */}
         {SCENES.map((scene, i) => {

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 import CinematicWalkthrough from "@/components/CinematicWalkthrough";
 import GraniteGrid from "@/components/GraniteGrid";
 
@@ -43,103 +44,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen" style={{ background: "#faf9f6" }}>
+      <Navbar />
 
-      {/* ========== NAVIGATION ========== */}
-      <header
-        className="fixed top-0 left-0 w-full z-50 transition-all duration-700"
-        style={{
-          background: "rgba(250,249,246,0.95)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid #e4ddd2",
-          paddingTop: "14px",
-          paddingBottom: "14px",
-          transform: showHeader ? "translateY(0)" : "translateY(-100%)",
-          opacity: showHeader ? 1 : 0,
-          pointerEvents: showHeader ? "auto" : "none",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="flex items-center gap-3 cursor-pointer bg-none border-none p-0"
-          >
-            <div className="gv-mark">
-              <span>GV</span>
-            </div>
-            <span
-              className="font-serif text-sm font-semibold tracking-[0.28em] text-[#1a1814]"
-            >
-              THE GRANITE VAULT
-            </span>
-          </button>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {[
-              { label: "Collection", id: "collection" },
-              { label: "Sourcing", id: "sourcing" },
-              { label: "About", id: "about" },
-              { label: "Contact", id: "contact" },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="nav-link text-[#5a4f44]"
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={() => scrollTo("contact")}
-              className="btn-primary py-2.5 px-6 text-[10px]"
-            >
-              Get a Quote
-            </button>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex flex-col gap-1.5 cursor-pointer border-none bg-none p-1"
-            aria-label="Menu"
-          >
-            {[0, 1, 2].map((i) => (
-              <span
-                key={i}
-                className="block w-5 h-[1.5px] transition-all duration-300 bg-[#1a1814]"
-              />
-            ))}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-stone-200 px-6 py-6 flex flex-col gap-4">
-            {[
-              { label: "Collection", id: "collection" },
-              { label: "Sourcing", id: "sourcing" },
-              { label: "About", id: "about" },
-              { label: "Contact", id: "contact" },
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="nav-link text-left text-[#5a4f44]"
-              >
-                {item.label}
-              </button>
-            ))}
-            <button onClick={() => scrollTo("contact")} className="btn-primary mt-2">
-              Get a Quote
-            </button>
-          </div>
-        )}
-      </header>
 
       <main>
         {/* ========== CINEMATIC WALKTHROUGH ========== */}
