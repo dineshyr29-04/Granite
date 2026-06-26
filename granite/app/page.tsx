@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import CorridorFlythrough from "@/components/CorridorFlythrough";
 import GraniteGrid from "@/components/GraniteGrid";
 
 export default function Home() {
-  const [flythroughActive, setFlythroughActive] = useState(false);
-
   const startShowroom = () => {
-    setFlythroughActive(true);
     // Smooth scroll down to start the flythrough container
     const showroomElement = document.getElementById("showroom");
     if (showroomElement) {
@@ -99,7 +96,7 @@ export default function Home() {
 
         {/* Section 2: Immersive 3D Corridor Sticky Section */}
         <section id="showroom" className="w-full relative bg-[#060608]">
-          <CorridorFlythrough onComplete={() => setFlythroughActive(true)} />
+          <CorridorFlythrough onComplete={() => {}} />
         </section>
 
         {/* Section 3: Granite Explorer Grid (Standard View Grid) */}
